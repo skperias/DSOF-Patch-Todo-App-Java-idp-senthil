@@ -249,7 +249,10 @@ public class AccountAction extends BaseAction {
     }
 
     private boolean newPasswordDoesNotMatchConfirmationPassword() {
-        return !changePasswordForm.getNewPassword().equals(changePasswordForm.getConfirmationPassword());
+        // Hash the new password and the confirmation password before comparing
+        String hashedNewPassword = BCrypt.hashpw(changePasswordForm.getNewPassword(), BCrypt.gensalt());
+        String hashedConfirmationPassword = BCrypt.hashpw(changePasswordForm.getConfirmationPassword(), BCrypt.gensalt());
+        return !hashedNewPassword.equals(hashedConfirmationPassword);
     }
     
     private boolean incorrectCurrentPassword(User user) {
