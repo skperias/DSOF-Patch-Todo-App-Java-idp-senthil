@@ -188,15 +188,22 @@
 			}
 			
 			html = '';
-			year = parseInt(year/10, 10) * 10;
+			const DECADE_START_OFFSET = -1;
+			const DECADE_END_OFFSET = 10;
+			const YEARS_IN_DECADE = 10;
+
+			year = Math.floor(year / YEARS_IN_DECADE) * YEARS_IN_DECADE;
 			var yearCont = this.picker.find('.datepicker-years')
-								.find('th:eq(1)')
-									.text(year + '-' + (year + 9))
-									.end()
-								.find('td');
-			year -= 1;
-			for (var i = -1; i < 11; i++) {
-				html += '<span class="year'+(i == -1 || i == 10 ? ' old' : '')+(currentYear == year ? ' active' : '')+'">'+year+'</span>';
+				.find('th:eq(1)')
+					.text(year + '-' + (year + YEARS_IN_DECADE - 1))
+					.end()
+				.find('td');
+			year += DECADE_START_OFFSET;
+			html = '';
+			for (var i = DECADE_START_OFFSET; i <= DECADE_END_OFFSET; i++) {
+				const isOldYear = (i === DECADE_START_OFFSET || i === DECADE_END_OFFSET);
+				const isActiveYear = (currentYear === year);
+				html += `<span class="year${isOldYear ? ' old' : ''}${isActiveYear ? ' active' : ''}">${year}</span>`;
 				year += 1;
 			}
 			yearCont.html(html);
@@ -332,8 +339,12 @@
 				val;
 			if (parts.length == format.parts.length) {
 				for (var i=0, cnt = format.parts.length; i < cnt; i++) {
-					val = parseInt(parts[i], 10)||1;
-					switch(format.parts[i]) {
+					const DEFAULT_DAY = 1;
+					const DEFAULT_MONTH = 0; // January
+					const DEFAULT_YEAR_OFFSET = 2000;
+
+					val = parseInt(parts[i], 10) || DEFAULT_DAY;
+					switch (format.parts[i]) {
 						case 'dd':
 						case 'd':
 							date.setDate(val);
@@ -343,7 +354,7 @@
 							date.setMonth(val - 1);
 							break;
 						case 'yy':
-							date.setFullYear(2000 + val);
+							date.setFullYear(DEFAULT_YEAR_OFFSET + val);
 							break;
 						case 'yyyy':
 							date.setFullYear(val);

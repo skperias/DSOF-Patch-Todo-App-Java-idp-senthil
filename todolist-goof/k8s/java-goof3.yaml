@@ -17,27 +17,14 @@ spec:
         app: goof
     spec:
       containers:
-      - image: ${DOCKER_ACCOUNT}/java-goof:latest
+      - image: ${DOCKER_ACCOUNT}/java-goof:1.0.0  # Use a specific version tag
         imagePullPolicy: Always
         name: java-goof
         securityContext:
-          readOnlyRootFilesystem: true
-        volumeMounts:
-          - mountPath: /usr/local/tomcat/temp
-            name: tomcat-temp
-          - mountPath: /usr/local/tomcat/work
-            name: tomcat-work
-          - mountPath: /usr/local/tomcat/logs
-            name: tomcat-logs
-      restartPolicy: Always
-      volumes:
-        - name: tomcat-temp
-          emptyDir: {}
-        - name: tomcat-work
-          emptyDir: {}
-        - name: tomcat-logs
-          emptyDir: {}
-
+          capabilities:
+            drop: ["ALL"]  # Drop all default capabilities
+            add: ["NET_BIND_SERVICE"]  # Add only the necessary capabilities
+      restartPolicy: Always  # Move this to the pod spec level
 ---
 apiVersion: v1
 kind: Service

@@ -17,10 +17,10 @@ spec:
         app: goof
     spec:
       containers:
-      - image: ${DOCKER_ACCOUNT}/java-goof:latest
+      - image: ${DOCKER_ACCOUNT}/java-goof:1.0.0  # Use a specific version tag
         imagePullPolicy: Always
         name: java-goof
-      restartPolicy: Always
+      restartPolicy: Always  # Move this to the pod spec level
 ---
 apiVersion: v1
 kind: Service
