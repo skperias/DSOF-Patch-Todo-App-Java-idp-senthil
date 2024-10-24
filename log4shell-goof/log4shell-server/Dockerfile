@@ -5,7 +5,7 @@ COPY src src
 RUN --mount=target=$HOME/.m2,type=cache mvn clean package
 
 # Use the latest OpenJDK image with Oracle Linux 8
-FROM openjdk:8-jdk-oraclelinux8 as ldap
+FROM openjdk:18.0.2-jdk-oraclelinux8 as ldap
 RUN yum update -y && yum install -y openssl-libs libgcrypt && yum clean all
 COPY --from=build target/log4shell-server-*-jar-with-dependencies.jar /server.jar
 EXPOSE 8000
