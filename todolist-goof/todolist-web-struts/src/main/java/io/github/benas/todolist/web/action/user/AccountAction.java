@@ -38,6 +38,8 @@ import javax.validation.ConstraintViolation;
 import java.text.MessageFormat;
 import java.util.Set;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 /**
  * Action class for Account CRUD operations.
  *
@@ -249,9 +251,15 @@ public class AccountAction extends BaseAction {
     private boolean newPasswordDoesNotMatchConfirmationPassword() {
         return !changePasswordForm.getNewPassword().equals(changePasswordForm.getConfirmationPassword());
     }
-
+    
     private boolean incorrectCurrentPassword(User user) {
-        return !changePasswordForm.getCurrentPassword().equals(user.getPassword());
+        // Compare the hashed password
+        return !BCrypt.checkpw(changePasswordForm.getCurrentPassword(), user.getPassword());
+    }
+    
+    // Example method to hash a password before storing it
+    private String hashPassword(String plainTextPassword) {
+        return BCrypt.hashpw(plainTextPassword, BCrypt.gensalt());
     }
 
     private void validateChangePasswordForm() {
