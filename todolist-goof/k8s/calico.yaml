@@ -4107,8 +4107,11 @@ spec:
               name: cni-bin-dir
           securityContext:
             capabilities:
+              drop: ["ALL"]
               add: ["NET_ADMIN", "SYS_TIME"]
-            runAsUser: 0
+            runAsUser: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
         # This container installs the CNI binaries
         # and CNI network config file on each node.
         - name: install-cni
@@ -4150,8 +4153,11 @@ spec:
               name: cni-net-dir
           securityContext:
             capabilities:
+              drop: ["ALL"]
               add: ["NET_ADMIN", "SYS_TIME"]
-            runAsUser: 0
+            runAsUser: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
         # Adds a Flex Volume Driver that creates a per-pod Unix Domain Socket to allow Dikastes
         # to communicate with Felix over the Policy Sync API.
         - name: flexvol-driver
@@ -4161,8 +4167,11 @@ spec:
             mountPath: /host/driver
           securityContext:
             capabilities:
+              drop: ["ALL"]
               add: ["NET_ADMIN", "SYS_TIME"]
-            runAsUser: 0
+            runAsUser: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
       containers:
         # Runs calico-node container on each Kubernetes node. This
         # container programs network policy and routes on each
@@ -4240,8 +4249,11 @@ spec:
               value: "true"
           securityContext:
             capabilities:
+              drop: ["ALL"]
               add: ["NET_ADMIN", "SYS_TIME"]
-            runAsUser: 0
+            runAsUser: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
 
           resources:
             requests:
@@ -4261,7 +4273,7 @@ spec:
             periodSeconds: 10
             initialDelaySeconds: 10
             failureThreshold: 6
-            timeoutSeconds: 10
+            timeoutSeconds
           readinessProbe:
             exec:
               command:
